@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Updated to v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4 # Updated to v4
         with:
           python-version: '3.9'
 
@@ -25,16 +25,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
         id: install
+        working-directory: ./ # added to specify the location of requirements.txt
 
   lint:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Updated to v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4 # Updated to v4
         with:
           python-version: '3.9'
 
@@ -42,20 +43,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install flake8
+        working-directory: ./ # added to specify the location of flake8
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero  --max-complexity=10 --max-line-length=127 --statistics
+        working-directory: ./ # added to specify the location of flake8
 
   test:
     runs-on: ubuntu-latest
     needs: lint
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Updated to v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4 # Updated to v4
         with:
           python-version: '3.9'
 
@@ -63,19 +66,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+        working-directory: ./ # added to specify the location of requirements.txt
       - name: Run tests with pytest
         run: |
-          pytest 
+          pytest
+        working-directory: ./ # added to specify the location of pytest
 
   format:
     runs-on: ubuntu-latest
     needs: test
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Updated to v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4 # Updated to v4
         with:
           python-version: '3.9'
 
@@ -83,6 +88,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install black
+        working-directory: ./ # added to specify the location of black
       - name: Format code with black
         run: |
           black .
+        working-directory: ./ # added to specify the location of black
